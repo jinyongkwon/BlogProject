@@ -146,24 +146,25 @@ public class UserController {
     // @ResponseBody -> BufferedWriter + Json 파싱(자바 오브젝트)
     // 유저수정 - 로그인 O
     @PutMapping("/s/user/{id}")
-    public String update(@PathVariable Integer id, @RequestBody User user) {
-
+    public @ResponseBody ResponseDto<String> update(@PathVariable Integer id, @RequestBody User user) {
+        System.out.println("user : " + user);
         User principal = (User) session.getAttribute("principal");
 
         // 1. 인증 체크
         if (principal == null) {
-            return "error/page1";
+            return new ResponseDto<String>(-1, "인증안됨", null);
         }
 
         // 2. 권한체크
         if (principal.getId() != id) {
-            return "error/page1";
+            return new ResponseDto<String>(-1, "권한없음", null);
         }
 
         User userEntity = userService.유저수정(id, user);
+
         session.setAttribute("principal", userEntity); // 세션변경 - 덮어쓰기
 
-        return "redirect:/s/user/" + id;
+        return new ResponseDto<String>(1, "성공", null);
     }
 
 }
