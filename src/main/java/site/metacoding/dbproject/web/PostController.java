@@ -22,13 +22,14 @@ import lombok.RequiredArgsConstructor;
 import site.metacoding.dbproject.domain.post.Post;
 import site.metacoding.dbproject.domain.post.PostRepository;
 import site.metacoding.dbproject.domain.user.User;
+import site.metacoding.dbproject.service.PostService;
 
 @RequiredArgsConstructor // final이 붙은 애들에 대한 생성자를 만들어준다.
 @Controller
 public class PostController {
 
     private final HttpSession session;
-    private final PostRepository postRepository;
+    private final PostService postService;
 
     // GET 글쓰기 페이지 /post/writeForm - 인증 O
     @GetMapping("/s/post/writeForm")
@@ -44,25 +45,11 @@ public class PostController {
     // @GetMapping({"/", "/post/list"})
     @GetMapping({ "/", "/post/list" })
     public String list(@RequestParam(defaultValue = "0") Integer page, Model model) {
-        // 1. postRepository의 findAll() 호출
-        // List<Post> posts = postRepository.findAll(Sort.by(Sort.Direction.DESC,
-        // "id")); // desc로 정렬
-        PageRequest pq = PageRequest.of(page, 3);
-        // List<Post> posts = postRepository.findAll();
-        // 2. model에 담기
-        // model.addAttribute("posts", posts);
-        model.addAttribute("posts", postRepository.findAll(pq)); // 이렇게 바로넣어도 사용가능
+        Page<Post> pagePosts = postService.글목록보기(page);
+        model.addAttribute("posts", pagePosts);
         model.addAttribute("prevPage", page - 1);
         model.addAttribute("nextPage", page + 1);
         return "post/list";
-    }
-
-    @GetMapping("/test/post/list")
-    // public @ResponseBody Page<Post> listTest(@RequestParam(value = "page") int p)
-    // {///
-    public @ResponseBody Page<Post> listTest(@RequestParam(defaultValue = "0") Integer page) {
-        PageRequest pq = PageRequest.of(page, 3);
-        return postRepository.findAll(pq);
     }
 
     // GET 글상세보기 페이지 /post/{id} (삭제버튼 만들어 두면됨, 수정버튼 만들어 두면됨) - 인증 X
