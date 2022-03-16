@@ -3,6 +3,7 @@ package site.metacoding.dbproject.service;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import site.metacoding.dbproject.domain.user.User;
@@ -24,6 +25,7 @@ public class UserService {
         }
     }
 
+    @Transactional
     public void 회원가입(User user) {
         userRepository.save(user);
     }
@@ -43,7 +45,17 @@ public class UserService {
         }
     }
 
-    public void 유저수정() {
+    @Transactional
+    public User 유저수정(Integer id, User user) {
+        // 1. 영속화
+        Optional<User> userOp = userRepository.findById(id);
 
-    }
+        if (userOp.isPresent()) { // 영속화 됨
+            User userEntity = userOp.get();
+            userEntity.setPassword(user.getPassword());
+            userEntity.setEmail(user.getEmail());
+            return userEntity;
+        }
+        return null;
+    }// 2. 트랜잭션 종료 + 영속화 되어있는 것들 전부 더티체킹(변경감지해서 디비에 flush)함
 }

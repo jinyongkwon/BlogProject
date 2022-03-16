@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 80
   servlet:
     context-path: /
     encoding:
@@ -20,6 +20,7 @@ spring:
       password: green1234
 
   jpa:
+    open-in-view: true
     hibernate:
       ddl-auto: update
       naming:
