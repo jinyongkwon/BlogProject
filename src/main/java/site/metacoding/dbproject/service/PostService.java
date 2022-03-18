@@ -37,8 +37,13 @@ public class PostService {
     }
 
     @Transactional
-    public void 글수정하기() {
-
+    public void 글수정하기(Post post, Integer id) {
+        Optional<Post> postOP = postRepository.findById(id);
+        if(postOP.isPresent()){
+            Post postEntity = postOP.get();
+            postEntity.setTitle(post.getTitle());
+            postEntity.setContent(post.getContent());
+        } // 더티체킹 완료 (수정됨)
     }
 
     @Transactional
