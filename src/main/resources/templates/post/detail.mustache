@@ -8,13 +8,16 @@
         작성자 : {{post.user.username}}
     </div>
     <div class="mb-3">
-        {{post.title}}
+        <h1>{{post.title}}</h1>
     </div>
+    <hr />
     <div class="mb-3">
         {{post.content}}
     </div>
+    {{#pageOwner}}
     <a href="/s/post/{{post.id}}/updateForm" class="btn btn-secondary">수정</a>
     <button class="btn btn-danger" id="btn-delete">삭제</button>
+    {{/pageOwner}}
     <!-- 상세정보 보기 끝 -->
 </div>
 <!-- 컨테이너 끝 -->
