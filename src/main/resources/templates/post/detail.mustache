@@ -3,21 +3,42 @@
 <!-- 컨테이너 시작  -->
 <div class="container mt-3">
     <!-- 상세정보 보기 시작 -->
-
-        <div class="mb-3 mt-3">
-           작성자 : {{post.user.username}}
-        </div>
-        <div class="mb-3">
-            {{post.title}}
-        </div>
-        <div class="mb-3">
-            {{post.content}}
-        </div>
-        <a href="/s/post/{{post.id}}/updateForm" class="btn btn-dark">수정 페이지이동</a>
-
+    <input type="hidden" id="id" value="{{post.id}}">
+    <div class="mb-3 mt-3">
+        작성자 : {{post.user.username}}
+    </div>
+    <div class="mb-3">
+        {{post.title}}
+    </div>
+    <div class="mb-3">
+        {{post.content}}
+    </div>
+    <a href="/s/post/{{post.id}}/updateForm" class="btn btn-secondary">수정</a>
+    <button class="btn btn-danger" id="btn-delete">삭제</button>
     <!-- 상세정보 보기 끝 -->
 </div>
 <!-- 컨테이너 끝 -->
 
-{{>/layout/footer}}
+<script>
+    async function deleteById() {
+        let id = $("#id").val();
+        let response = await fetch("/s/post/" + id, {
+            method: "DELETE"
+        });
+        let responseObject = await response.json();
 
+        if (responseObject.code == 1) {
+            alert("삭제에 성공했습니다.");
+            location.href = "/";
+        } else {
+            alert("삭제에 실패했습니다. " + responseObject.msg);
+        }
+    }
+
+    $("#btn-delete").click((event) => {
+        deleteById();
+    });
+</script>
+
+
+{{>/layout/footer}}

@@ -42,8 +42,8 @@ public class PostService {
     }
 
     @Transactional
-    public void 글삭제하기() {
-
+    public void 글삭제하기(Integer id) {
+        postRepository.deleteById(id); // 실패시 내부적으로 exception 터짐
     }
 
     @Transactional
